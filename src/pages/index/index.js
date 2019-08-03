@@ -1,12 +1,16 @@
 import 'css/common.css'
 import './index.css'
-import { InfiniteScroll } from 'mint-ui';
+
+import { InfiniteScroll } from 'mint-ui'
+Vue.use(InfiniteScroll)
+
 import Vue from 'vue'
 import axios from 'axios'
 import url from 'js/api.js'
+import Foot from 'components/Foot.vue'
 
 
-Vue.use(InfiniteScroll);
+
 
 new Vue({
     el:'#app',
@@ -44,5 +48,8 @@ new Vue({
                 this.pageNum++   
             })          
         }
+    },
+    components:{
+        Foot
     }
 })
