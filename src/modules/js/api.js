@@ -1,6 +1,9 @@
 let url={
     hotLists:'/index/hotLists',
-    banner:'/index/banner'
+    banner:'/index/banner',
+    topLists:'/category/topLists',
+    subLists:'/category/subLists',
+    rank:'/category/rank'
 
 }
 
@@ -13,3 +16,5 @@ for(let key in url){
 }
 
 export default url 
+
+
