@@ -80,7 +80,7 @@
                         </div>
                         <div class="detail">
                           <div class="title">{{list.name}}</div>
-                          <div class="price">￥{{list.price | number}}</div>
+                          <div class="price">￥{{list.price | currency}}</div>
                           <div class="recommend">
                             <span>推荐值:</span>
                             <span>{{list.recommend}}</span>
@@ -137,7 +137,8 @@
               <h3 class="category-title">热门品牌 </h3>
               <ul class="category-content">
                 <li class="category-item js-category-item" v-for="list in subData.brandList"
-                 :data-item-id="list.id" :data-item-name="list.name">
+                 :data-item-id="list.id" :data-item-name="list.name"
+                 @click="toSearch(list)">
                   <img :src="list.image" :alt="list.name" class="category-img">
                   <span class="category-item-name">
                   {{list.name}}            </span>
@@ -146,7 +147,8 @@
               <h3 class="category-title"> 热门分类  </h3>
               <ul class="category-content">
                 <li class="category-item js-category-item" v-for="list in subData.categoryList"
-                 :data-item-id="list.id" :data-item-name="list.name">
+                 :data-item-id="list.id" :data-item-name="list.name"
+                 @click="toSearch(list)">
                   <img :src="list.image" :alt="list.name" class="category-img">
                   <span class="category-item-name">
                   {{list.name}}            </span>
