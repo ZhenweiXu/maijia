@@ -6,7 +6,8 @@ let url={
     rank:'/category/rank',
     searchLists:'/search/list',
     details:'/goods/details',
-    deal:'/goods/deal'
+    deal:'/goods/deal',
+    addCart:'/cart/add',
 
 }
 
