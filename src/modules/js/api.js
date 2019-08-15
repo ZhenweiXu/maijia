@@ -13,7 +13,7 @@ let url = {
     cartRemove: '/cart/remove',
     cartMremove: '/cart/mremove',
     cartAdd: '/cart/add',
-    cartReduce: '/cart/reduce'
+    cartReduce: '/cart/reduce',
 
 }
 

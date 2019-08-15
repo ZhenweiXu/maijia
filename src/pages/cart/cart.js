@@ -14,7 +14,10 @@ new Vue({
         total: 0,
         totalNum: 0,
         editingShop: null,
-        editingShopIndex: -1
+        editingShopIndex: -1,
+        removePopup: false,
+        removeData: null,
+        removeMsg: '确定要删除该商品吗？'
     },
     created() {
         this.getLists()
@@ -157,6 +160,32 @@ new Vue({
                 number: 1
             }).then(res => {
                 good.number--
+            })
+        },
+        remove(shop, shopIndex, good, goodIndex) {
+            this.removePopup = true
+            this.removeData = { shop, shopIndex, good, goodIndex }
+        },
+        removeConfirm() {
+            let { shop, shopIndex, good, goodIndex } = this.removeData
+            axios.post(url.cartRemove, {
+                id: good.id
+            }).then(res => {
+                shop.goodsList.splice(goodIndex, 1)
+                if (shop.goodsList.length === 0) {
+                    this.lists.splice(shopIndex, 1)
+                        //切换到正常显示状态
+                    this.removeShop()
+                }
+                this.removePopup = false
+            })
+        },
+        removeShop() {
+            this.editingShop = null
+            this.editingShopIndex = -1
+            this.lists.forEach(shop => {
+                shop.editing = false
+                shop.editingMsg = '编辑'
             })
         }
     },
