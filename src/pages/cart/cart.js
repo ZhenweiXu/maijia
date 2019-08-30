@@ -6,6 +6,9 @@ import Vue from 'vue'
 import mixin from 'js/mixin.js'
 import axios from 'axios'
 import url from 'js/api.js'
+import Volecity from 'velocity-animate'
+import Cart from 'js/cartService.js'
+
 
 new Vue({
     el: '.container',
@@ -144,56 +147,76 @@ new Vue({
             this.editingShopIndex = shop.editing ? shopIndex : -1
 
         },
+        inputNum(e, shopIndex, good, goodIndex) {
+            //禁止输入非法字符
+            if ('0123456789'.indexOf(e.key) === -1 && e.key !== 'Backspace') {
+                return e.returnValue = false
+            }
+        },
+        changeNum(shopIndex, good, goodIndex) {
+            let num = good.number
+            if (num === '0' || num === '') {
+                num = 1
+            }
+            //如果第一个数字是0，把他删除掉
+            while (num.charAt(0) === '0') {
+                num = num.substring(1)
+            }
+
+            Cart.update(good.id, num).then(res => {
+                good.number = num
+            })
+
+        },
         //增加和减少都是先修改数据库的内容，成功后再修改本地页面的内容
         add(good) {
-            axios.post(url.cartAdd, {
-                id: good.id,
-                number: 1
-            }).then(res => {
+            Cart.add(good.id).then(res => {
                 good.number++
             })
         },
         reduce(good) {
             if (good.number === 1) return
-            axios.post(url.cartReduce, {
-                id: good.id,
-                number: 1
-            }).then(res => {
+            Cart.reduce(good.id).then(res => {
                 good.number--
             })
         },
         remove(shop, shopIndex, good, goodIndex) {
             this.removePopup = true
+            document.body.style = "height:100%;overflow:hidden;"
             this.removeData = { shop, shopIndex, good, goodIndex }
         },
         removeList() {
             this.removePopup = true
+            document.body.style = "height:100%;overflow:hidden;"
             this.removeMsg = `确定将所选${this.removeLists.length}个商品删除？`
 
         },
         removeConfirm() {
             if (this.removeMsg === `确定要删除该商品吗？`) {
                 let { shop, shopIndex, good, goodIndex } = this.removeData
-                axios.post(url.cartRemove, {
-                    id: good.id
-                }).then(res => {
+                Cart.remove(good.id).then(res => {
                     shop.goodsList.splice(goodIndex, 1)
                     if (shop.goodsList.length === 0) {
                         this.lists.splice(shopIndex, 1)
                             //切换到正常显示状态
                         this.removeShop()
+                        Volecity(this.$refs[`goods-${shopIndex}-${goodIndex}`], {
+                            left: '0px'
+                        }, 300)
                     }
                     this.removePopup = false
+                    document.body.style = "height:auto;overflow:auto;"
+                        //Volecity(this.$refs[`goods-${shopIndex}-${goodIndex}`])[0].style.left = '0px'
                 })
             } else {
+                //删除多个商品
                 let ids = []
                 this.removeLists.forEach(good => {
                     ids.push(good.id)
                 })
-                axios.post(url.cartMremove, {
-                    ids
-                }).then(res => {
+                Cart.mremove(ids).then(res => {
                     let arr = []
+
                     this.editingShop.goodsList.forEach(good => {
                         let index = this.removeLists.findIndex(item => {
                             return item.id === good.id
@@ -209,9 +232,15 @@ new Vue({
                         this.removeShop()
                     }
                     this.removePopup = false
+                    document.body.style = "height:auto;overflow:auto;"
                 })
             }
 
+        },
+        removeCancel() {
+            this.removePopup = false
+            document.body.style = "height:auto;overflow:auto;"
+            this.removeData = null
         },
         removeShop() {
             this.editingShop = null
@@ -220,6 +249,22 @@ new Vue({
                 shop.editing = false
                 shop.editingMsg = '编辑'
             })
+        },
+        start(e, good) {
+            good.startX = e.changedTouches[0].clientX
+        },
+        end(e, shopIndex, good, goodIndex) {
+            let endX = e.changedTouches[0].clientX
+            let left = '0'
+            if (good.startX - endX > 100) {
+                left = '-60px'
+            }
+            if (endX - good.startX > 100) {
+                left = '0px'
+            }
+            Volecity(this.$refs[`goods-${shopIndex}-${goodIndex}`], {
+                left
+            }, 300)
         }
     },
 
