@@ -18,7 +18,7 @@ let url = {
     addressLists: '/address/list',
     addressAdd: '/address/add',
     addressRemove: '/address/remove',
-    addressUpdate: 'address/update',
+    addressUpdate: '/address/update',
     addressSetDefault: '/address/setDefault'
 
 }
