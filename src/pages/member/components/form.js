@@ -39,7 +39,24 @@ export default {
         add() {
             //需要做非空和合法性校验
             let { name, tel, provinceValue, cityValue, districtValue, address } = this
-            let data = { name, tel, provinceValue, cityValue, districtValue, address }
+            //根据value找出省市区的名称
+            let provinceName, cityName, districtName
+            this.addressData.list.forEach(p => {
+                if (p.value === provinceValue) {
+                    provinceName = p.label
+                    p.children.forEach(c => {
+                        if (c.value === cityValue) {
+                            cityName = c.label
+                            c.children.forEach(d => {
+                                if (d.value === districtValue) {
+                                    districtName = d.label
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+            let data = { name, tel, provinceValue, cityValue, districtValue, provinceName, cityName, districtName, address }
             if (this.type === 'add') {
                 // Address.add(data).then(res => {
                 //     this.$router.go(-1)
