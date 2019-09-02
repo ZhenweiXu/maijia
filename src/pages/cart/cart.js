@@ -189,7 +189,6 @@ new Vue({
             this.removePopup = true
             document.body.style = "height:100%;overflow:hidden;"
             this.removeMsg = `确定将所选${this.removeLists.length}个商品删除？`
-
         },
         removeConfirm() {
             if (this.removeMsg === `确定要删除该商品吗？`) {
@@ -210,13 +209,13 @@ new Vue({
                 })
             } else {
                 //删除多个商品
+
                 let ids = []
                 this.removeLists.forEach(good => {
                     ids.push(good.id)
                 })
                 Cart.mremove(ids).then(res => {
                     let arr = []
-
                     this.editingShop.goodsList.forEach(good => {
                         let index = this.removeLists.findIndex(item => {
                             return item.id === good.id
@@ -226,7 +225,7 @@ new Vue({
                         }
                     })
                     if (arr.length) {
-                        this.editingShop.goodList = arr
+                        this.editingShop.goodsList = arr
                     } else {
                         this.lists.splice(this.editingShopIndex, 1)
                         this.removeShop()
