@@ -25,18 +25,28 @@ export default {
     },
     name: {}
   },
-  create() {},
+  methods: {
+    createSwipe() {
+      new Swiper(".swiper-container", {
+        loop: true,
+        pagination: {
+          el: ".swiper-pagination"
+        },
+        autoplay: {
+          delay: 4000
+        },
+        speed: 800
+      });
+    }
+  },
   mounted() {
-    new Swiper(".swiper-container", {
-      loop: true,
-      pagination: {
-        el: ".swiper-pagination"
-      },
-      autoplay: {
-        delay: 4000
-      },
-      speed: 2000
-    });
+    if (this.lists) {
+      this.createSwipe();
+    } else {
+      this.$watch("lists", (newVal, oldVal) => {
+        this.createSwipe();
+      });
+    }
   }
 };
 </script>
@@ -45,9 +55,13 @@ export default {
   height: 100%;
   width: 100%;
 }
-.swiper-pagination-bullet {
+.swiper-container .swiper-pagination-bullet {
   width: 5px;
   height: 5px;
+  
+}
+.swiper-pagination.swiper-pagination-bullets{
+  text-align: center;
 }
 </style>
 
